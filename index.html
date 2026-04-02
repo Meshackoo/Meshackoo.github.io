@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRON FORGE — Elite Performance Gym</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --deep: #111111;
+    --charcoal: #1c1c1c;
+    --iron: #2a2a2a;
+    --smoke: #888;
+    --silver: #c0c0c0;
+    --white: #f5f5f0;
+    --red: #e63329;
+    --red-dark: #b01f16;
+    --red-glow: rgba(230,51,41,0.25);
+    --gold: #c9a84c;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+    backdrop-filter: blur(4px);
+    transition: background 0.3s;
+  }
+  nav.scrolled { background: rgba(10,10,10,0.97); }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 4px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--red); }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+  .nav-links a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--silver);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--red); }
+  .nav-cta {
+    background: var(--red); color: var(--white) !important;
+    padding: 0.55rem 1.4rem;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--red-dark) !important; color: var(--white) !important; }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    position: relative; overflow: hidden;
+    padding: 0 4rem 5rem;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(160deg, transparent 40%, rgba(230,51,41,0.08) 100%),
+      linear-gradient(to bottom, rgba(10,10,10,0.2) 0%, rgba(10,10,10,0.7) 60%, var(--black) 100%);
+    z-index: 1;
+  }
+
+  /* animated grid lines */
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridShift 20s linear infinite;
+  }
+  @keyframes gridShift {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(60px); }
+  }
+
+  .hero-image-area {
+    position: absolute; right: 0; top: 0; width: 55%; height: 100%;
+    background:
+      linear-gradient(to right, var(--black) 0%, transparent 30%),
+      linear-gradient(to bottom, transparent 10%, var(--black) 100%),
+      url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1400&q=80') center/cover no-repeat;
+    z-index: 0;
+    filter: grayscale(30%) contrast(1.1);
+  }
+
+  .hero-content { position: relative; z-index: 2; max-width: 700px; }
+
+  .hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--red); margin-bottom: 1rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 10vw, 8.5rem);
+    line-height: 0.9; letter-spacing: 4px;
+    color: var(--white);
+    animation: fadeUp 0.8s 0.15s ease both;
+  }
+  .hero-title em { color: var(--red); font-style: normal; }
+
+  .hero-sub {
+    font-size: 1.05rem; font-weight: 300;
+    color: var(--smoke); margin-top: 1.5rem; max-width: 440px; line-height: 1.7;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; margin-top: 2.5rem;
+    animation: fadeUp 0.8s 0.45s ease both;
+  }
+
+  .btn-primary {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase;
+    background: var(--red); color: var(--white);
+    padding: 1rem 2.4rem; text-decoration: none;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    transition: background 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--red-dark); transform: translateY(-2px); }
+
+  .btn-outline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.25); color: var(--white);
+    padding: 1rem 2.4rem; text-decoration: none;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--red); color: var(--red); transform: translateY(-2px); }
+
+  .hero-stats {
+    display: flex; gap: 3rem; margin-top: 4rem;
+    animation: fadeUp 0.8s 0.6s ease both;
+  }
+  .stat-item { }
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem;
+    color: var(--white); line-height: 1;
+  }
+  .stat-number span { color: var(--red); }
+  .stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--smoke); margin-top: 0.3rem;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── MARQUEE ─── */
+  .marquee-section {
+    background: var(--red); overflow: hidden;
+    padding: 0.8rem 0; border-top: 1px solid var(--red-dark); border-bottom: 1px solid var(--red-dark);
+  }
+  .marquee-track {
+    display: flex; gap: 3rem; width: max-content;
+    animation: marquee 20s linear infinite;
+  }
+  .marquee-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem; letter-spacing: 5px; color: rgba(255,255,255,0.9);
+    white-space: nowrap; display: flex; align-items: center; gap: 3rem;
+  }
+  .marquee-dot { width: 5px; height: 5px; background: rgba(255,255,255,0.5); border-radius: 50%; display: inline-block; }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ─── SECTION SHARED ─── */
+  section { padding: 7rem 4rem; }
+
+  .section-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--red); margin-bottom: 1rem; display: block;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    letter-spacing: 3px; line-height: 1;
+  }
+  .section-sub {
+    font-size: 1rem; color: var(--smoke); line-height: 1.75;
+    max-width: 500px; margin-top: 1rem; font-weight: 300;
+  }
+
+  /* ─── ABOUT ─── */
+  #about {
+    background: var(--deep);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
+  }
+  .about-image-wrap {
+    position: relative;
+  }
+  .about-image-wrap img {
+    width: 100%; aspect-ratio: 4/5; object-fit: cover;
+    filter: grayscale(20%) contrast(1.1);
+    display: block;
+  }
+  .about-image-accent {
+    position: absolute; bottom: -2rem; right: -2rem;
+    width: 60%; height: 60%;
+    border: 2px solid var(--red); z-index: -1;
+  }
+  .about-badge {
+    position: absolute; top: 2rem; left: -2rem;
+    background: var(--red); padding: 1.5rem;
+    text-align: center;
+  }
+  .about-badge .num {
+    font-family: 'Bebas Neue', sans-serif; font-size: 3rem;
+    line-height: 1; color: var(--white); display: block;
+  }
+  .about-badge .lbl {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.8);
+  }
+  .about-features { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .feat-item {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 1rem; border-left: 2px solid var(--iron);
+    transition: border-color 0.2s;
+  }
+  .feat-item:hover { border-color: var(--red); }
+  .feat-icon {
+    width: 36px; height: 36px; flex-shrink: 0;
+    background: var(--red); display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .feat-text h4 {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; letter-spacing: 1px;
+    font-weight: 600; color: var(--white);
+  }
+  .feat-text p { font-size: 0.85rem; color: var(--smoke); margin-top: 0.2rem; }
+
+  /* ─── PROGRAMS ─── */
+  #programs { background: var(--black); }
+  .programs-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+  .programs-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px;
+  }
+  .program-card {
+    position: relative; overflow: hidden; aspect-ratio: 3/4; cursor: pointer;
+  }
+  .program-card img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(50%) brightness(0.6);
+    transition: transform 0.6s ease, filter 0.4s;
+  }
+  .program-card:hover img { transform: scale(1.06); filter: grayscale(0%) brightness(0.5); }
+  .program-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, transparent 60%);
+    display: flex; flex-direction: column; justify-content: flex-end; padding: 2rem;
+  }
+  .program-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--red); margin-bottom: 0.5rem;
+  }
+  .program-name {
+    font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 2px;
+    color: var(--white); line-height: 1;
+  }
+  .program-desc {
+    font-size: 0.8rem; color: var(--smoke); margin-top: 0.5rem; line-height: 1.5;
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .program-card:hover .program-desc { opacity: 1; transform: translateY(0); }
+  .program-arrow {
+    display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--red);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .program-card:hover .program-arrow { opacity: 1; }
+
+  /* ─── TRAINERS ─── */
+  #trainers { background: var(--charcoal); }
+  .trainers-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-top: 3rem; }
+  .trainer-card { position: relative; }
+  .trainer-card img {
+    width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block;
+    filter: grayscale(30%);
+    transition: filter 0.3s;
+  }
+  .trainer-card:hover img { filter: grayscale(0%); }
+  .trainer-line {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(10,10,10,0.95), transparent);
+    padding: 2rem 1.2rem 1.2rem;
+  }
+  .trainer-name {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 2px;
+  }
+  .trainer-role {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem;
+    letter-spacing: 3px; text-transform: uppercase; color: var(--red);
+  }
+  .trainer-socials { display: flex; gap: 0.8rem; margin-top: 0.5rem; }
+  .trainer-socials a {
+    width: 30px; height: 30px; border: 1px solid rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--smoke); text-decoration: none; font-size: 0.75rem;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .trainer-socials a:hover { border-color: var(--red); color: var(--red); }
+
+  /* ─── PRICING ─── */
+  #pricing { background: var(--black); }
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 3rem; }
+  .price-card {
+    background: var(--charcoal); padding: 3rem 2.5rem;
+    position: relative; overflow: hidden;
+    transition: background 0.3s;
+  }
+  .price-card.featured { background: var(--red); }
+  .price-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--iron);
+  }
+  .price-card.featured::before { background: rgba(255,255,255,0.3); }
+  .price-badge {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem;
+    letter-spacing: 4px; text-transform: uppercase;
+    color: rgba(255,255,255,0.6); margin-bottom: 1.5rem; display: block;
+  }
+  .price-card.featured .price-badge { color: rgba(255,255,255,0.85); }
+  .price-name {
+    font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 3px;
+  }
+  .price-amount {
+    font-family: 'Bebas Neue', sans-serif; font-size: 4.5rem;
+    line-height: 1; margin-top: 1rem; color: var(--white);
+  }
+  .price-amount sup { font-size: 1.5rem; vertical-align: top; margin-top: 0.8rem; }
+  .price-amount span { font-size: 1rem; font-family: 'Barlow Condensed', sans-serif; color: rgba(255,255,255,0.5); }
+  .price-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 2rem 0; }
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
+  .price-features li {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem;
+    letter-spacing: 1px; color: rgba(255,255,255,0.75);
+    display: flex; align-items: center; gap: 0.7rem;
+  }
+  .price-features li::before {
+    content: '✓'; color: var(--white); font-weight: bold; flex-shrink: 0;
+  }
+  .price-features li.off { color: rgba(255,255,255,0.3); }
+  .price-features li.off::before { content: '×'; color: rgba(255,255,255,0.2); }
+  .price-btn {
+    display: block; margin-top: 2.5rem; text-align: center; text-decoration: none;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase;
+    padding: 1rem;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    transition: background 0.2s, color 0.2s;
+  }
+  .price-card:not(.featured) .price-btn {
+    background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.2);
+  }
+  .price-card:not(.featured) .price-btn:hover { background: var(--red); border-color: var(--red); }
+  .price-card.featured .price-btn { background: var(--white); color: var(--red); }
+  .price-card.featured .price-btn:hover { background: var(--black); color: var(--white); }
+
+  /* ─── TESTIMONIALS ─── */
+  #testimonials { background: var(--deep); overflow: hidden; }
+  .testimonials-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
+  .testimonials-track { display: flex; gap: 2rem; }
+  .testimonial-card {
+    background: var(--charcoal); padding: 2.5rem; min-width: 380px; flex-shrink: 0;
+    border-left: 3px solid var(--red); position: relative;
+  }
+  .testimonial-stars { color: var(--gold); letter-spacing: 3px; font-size: 0.9rem; margin-bottom: 1.2rem; }
+  .testimonial-text {
+    font-size: 0.95rem; line-height: 1.7; color: var(--silver); font-style: italic;
+  }
+  .testimonial-author { margin-top: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+  .author-avatar {
+    width: 44px; height: 44px; border-radius: 0; object-fit: cover;
+    filter: grayscale(30%);
+  }
+  .author-name {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem; letter-spacing: 1px;
+    font-weight: 600; color: var(--white);
+  }
+  .author-title { font-size: 0.75rem; color: var(--smoke); }
+
+  /* ─── CTA BANNER ─── */
+  #cta {
+    background: var(--red); padding: 6rem 4rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+    position: relative; overflow: hidden;
+  }
+  #cta::before {
+    content: 'FORGE'; position: absolute; right: -2rem; top: 50%; transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif; font-size: 18rem; letter-spacing: 20px;
+    color: rgba(255,255,255,0.05); white-space: nowrap; pointer-events: none;
+  }
+  .cta-left .cta-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 5px;
+    text-transform: uppercase; color: rgba(255,255,255,0.65); margin-bottom: 0.8rem;
+  }
+  .cta-left .cta-title {
+    font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 5vw, 4.5rem);
+    letter-spacing: 3px; line-height: 1; color: var(--white);
+  }
+  .cta-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+  .btn-white {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem; letter-spacing: 3px;
+    text-transform: uppercase; background: var(--white); color: var(--red);
+    padding: 1.1rem 2.5rem; text-decoration: none; display: inline-block;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-white:hover { background: var(--black); color: var(--white); }
+  .cta-phone {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; letter-spacing: 2px;
+    color: rgba(255,255,255,0.8); text-decoration: none;
+  }
+  .cta-phone:hover { color: var(--white); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--deep); border-top: 1px solid var(--iron);
+    padding: 5rem 4rem 2rem;
+  }
+  .footer-top {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; margin-bottom: 4rem;
+  }
+  .footer-brand .logo {
+    font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 5px;
+    text-decoration: none; color: var(--white);
+  }
+  .footer-brand .logo span { color: var(--red); }
+  .footer-brand p { font-size: 0.85rem; color: var(--smoke); margin-top: 1rem; line-height: 1.7; max-width: 280px; }
+  .footer-socials { display: flex; gap: 0.8rem; margin-top: 1.5rem; }
+  .footer-socials a {
+    width: 38px; height: 38px; border: 1px solid var(--iron);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--smoke); text-decoration: none; font-size: 0.8rem;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .footer-socials a:hover { border-color: var(--red); color: var(--red); }
+  .footer-col h5 {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem;
+    letter-spacing: 4px; text-transform: uppercase; color: var(--red); margin-bottom: 1.5rem;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+  .footer-col ul a {
+    font-size: 0.85rem; color: var(--smoke); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-col ul a:hover { color: var(--white); }
+  .footer-bottom {
+    border-top: 1px solid var(--iron); padding-top: 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.75rem; color: var(--smoke); flex-wrap: wrap; gap: 1rem;
+  }
+
+  /* ─── SCROLL REVEAL ─── */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 2rem; }
+    nav .nav-links { display: none; }
+    section { padding: 5rem 2rem; }
+    #about { grid-template-columns: 1fr; gap: 3rem; }
+    .programs-grid { grid-template-columns: 1fr 1fr; }
+    .trainers-grid { grid-template-columns: 1fr 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .hero-image-area { opacity: 0.4; width: 100%; }
+    #hero { padding: 0 2rem 4rem; }
+  }
+  @media (max-width: 600px) {
+    .programs-grid { grid-template-columns: 1fr; }
+    .trainers-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">IRON<span>FORGE</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#trainers">Trainers</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#cta" class="nav-cta">Join Now</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-image-area"></div>
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">— Elite Performance Training</p>
+    <h1 class="hero-title">FORGE YOUR<br><em>LIMITS</em></h1>
+    <p class="hero-sub">Where iron meets will. A premium training facility built for athletes who refuse to settle. Unlock your highest performance.</p>
+    <div class="hero-actions">
+      <a href="#pricing" class="btn-primary">Start Training</a>
+      <a href="#programs" class="btn-outline">View Programs</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-number">12<span>K+</span></div>
+        <div class="stat-label">Members</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">50<span>+</span></div>
+        <div class="stat-label">Elite Trainers</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">15<span>yrs</span></div>
+        <div class="stat-label">Experience</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <!-- repeated twice for seamless loop -->
+    <div class="marquee-item">STRENGTH TRAINING <span class="marquee-dot"></span></div>
+    <div class="marquee-item">HIIT CLASSES <span class="marquee-dot"></span></div>
+    <div class="marquee-item">OLYMPIC LIFTING <span class="marquee-dot"></span></div>
+    <div class="marquee-item">SPORTS CONDITIONING <span class="marquee-dot"></span></div>
+    <div class="marquee-item">NUTRITION COACHING <span class="marquee-dot"></span></div>
+    <div class="marquee-item">RECOVERY SUITES <span class="marquee-dot"></span></div>
+    <div class="marquee-item">STRENGTH TRAINING <span class="marquee-dot"></span></div>
+    <div class="marquee-item">HIIT CLASSES <span class="marquee-dot"></span></div>
+    <div class="marquee-item">OLYMPIC LIFTING <span class="marquee-dot"></span></div>
+    <div class="marquee-item">SPORTS CONDITIONING <span class="marquee-dot"></span></div>
+    <div class="marquee-item">NUTRITION COACHING <span class="marquee-dot"></span></div>
+    <div class="marquee-item">RECOVERY SUITES <span class="marquee-dot"></span></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-image-wrap reveal">
+    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&q=80" alt="Training" loading="lazy">
+    <div class="about-image-accent"></div>
+    <div class="about-badge">
+      <span class="num">15</span>
+      <span class="lbl">Years of Excellence</span>
+    </div>
+  </div>
+  <div class="about-text reveal">
+    <span class="section-eyebrow">Who We Are</span>
+    <h2 class="section-title">BUILT FOR THOSE WHO PUSH HARDER</h2>
+    <p class="section-sub">Iron Forge isn't just a gym — it's a proving ground. We've engineered every square foot, every program, and every piece of equipment around one goal: helping you become exceptional.</p>
+    <div class="about-features">
+      <div class="feat-item">
+        <div class="feat-icon">🏋️</div>
+        <div class="feat-text">
+          <h4>World-Class Equipment</h4>
+          <p>Over 800 pieces of premium equipment across 3 specialized floors.</p>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">🔬</div>
+        <div class="feat-text">
+          <h4>Science-Backed Methodology</h4>
+          <p>Programs designed with sports scientists and certified nutritionists.</p>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">🏆</div>
+        <div class="feat-text">
+          <h4>Championship Mindset</h4>
+          <p>A culture of elite performance that elevates every single member.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAMS -->
+<section id="programs">
+  <div class="programs-header reveal">
+    <div>
+      <span class="section-eyebrow">What We Offer</span>
+      <h2 class="section-title">PROGRAMS BUILT<br>TO WIN</h2>
+    </div>
+    <a href="#" class="btn-outline">All Programs</a>
+  </div>
+  <div class="programs-grid reveal">
+    <div class="program-card">
+      <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=600&q=80" alt="Strength" loading="lazy">
+      <div class="program-overlay">
+        <div class="program-tag">Foundation</div>
+        <div class="program-name">STRENGTH<br>TRAINING</div>
+        <p class="program-desc">Build raw power with periodized programs designed for progressive overload and maximum hypertrophy.</p>
+        <div class="program-arrow">Learn More →</div>
+      </div>
+    </div>
+    <div class="program-card">
+      <img src="https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=600&q=80" alt="HIIT" loading="lazy">
+      <div class="program-overlay">
+        <div class="program-tag">Conditioning</div>
+        <div class="program-name">HIIT &amp;<br>CARDIO</div>
+        <p class="program-desc">High-intensity intervals that shred fat, build endurance, and redefine your cardiovascular ceiling.</p>
+        <div class="program-arrow">Learn More →</div>
+      </div>
+    </div>
+    <div class="program-card">
+      <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80" alt="Olympic" loading="lazy">
+      <div class="program-overlay">
+        <div class="program-tag">Elite</div>
+        <div class="program-name">OLYMPIC<br>LIFTING</div>
+        <p class="program-desc">Master the clean, snatch, and jerk under world-class coaching. Speed, power, technique — perfected.</p>
+        <div class="program-arrow">Learn More →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRAINERS -->
+<section id="trainers">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;" class="reveal">
+    <div>
+      <span class="section-eyebrow">The Team</span>
+      <h2 class="section-title">YOUR COACHES.<br>YOUR EDGE.</h2>
+    </div>
+    <p class="section-sub">Every trainer at Iron Forge is certified, competition-tested, and obsessed with your results.</p>
+  </div>
+  <div class="trainers-grid reveal">
+    <div class="trainer-card">
+      <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&q=80" alt="Trainer" loading="lazy">
+      <div class="trainer-line">
+        <div class="trainer-name">MARCUS STEEL</div>
+        <div class="trainer-role">Strength & Power</div>
+        <div class="trainer-socials">
+          <a href="#">ig</a><a href="#">tw</a>
+        </div>
+      </div>
+    </div>
+    <div class="trainer-card">
+      <img src="https://images.unsplash.com/photo-1594381898411-846e7d193883?w=400&q=80" alt="Trainer" loading="lazy">
+      <div class="trainer-line">
+        <div class="trainer-name">ZARA CROSS</div>
+        <div class="trainer-role">HIIT & Conditioning</div>
+        <div class="trainer-socials">
+          <a href="#">ig</a><a href="#">tw</a>
+        </div>
+      </div>
+    </div>
+    <div class="trainer-card">
+      <img src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=400&q=80" alt="Trainer" loading="lazy">
+      <div class="trainer-line">
+        <div class="trainer-name">RYAN OKAFOR</div>
+        <div class="trainer-role">Olympic Lifting</div>
+        <div class="trainer-socials">
+          <a href="#">ig</a><a href="#">tw</a>
+        </div>
+      </div>
+    </div>
+    <div class="trainer-card">
+      <img src="https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?w=400&q=80" alt="Trainer" loading="lazy">
+      <div class="trainer-line">
+        <div class="trainer-name">NINA VALE</div>
+        <div class="trainer-role">Nutrition & Recovery</div>
+        <div class="trainer-socials">
+          <a href="#">ig</a><a href="#">tw</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="reveal" style="text-align:center;">
+    <span class="section-eyebrow">Membership</span>
+    <h2 class="section-title">PICK YOUR LEVEL</h2>
+    <p class="section-sub" style="margin:0 auto;text-align:center;">No long-term lock-ins. Cancel anytime. Every plan comes with a free 7-day trial.</p>
+  </div>
+  <div class="pricing-grid reveal">
+    <div class="price-card">
+      <span class="price-badge">Starter</span>
+      <div class="price-name">BASIC</div>
+      <div class="price-amount"><sup>$</sup>39<span>/mo</span></div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li>Full Gym Access</li>
+        <li>2 Group Classes / Week</li>
+        <li>Locker Room Access</li>
+        <li class="off">Personal Trainer Sessions</li>
+        <li class="off">Nutrition Coaching</li>
+        <li class="off">Recovery Suite Access</li>
+      </ul>
+      <a href="#" class="price-btn">Get Started</a>
+    </div>
+    <div class="price-card featured">
+      <span class="price-badge">⚡ Most Popular</span>
+      <div class="price-name">ELITE</div>
+      <div class="price-amount"><sup>$</sup>89<span>/mo</span></div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li>Full Gym Access</li>
+        <li>Unlimited Group Classes</li>
+        <li>Locker Room Access</li>
+        <li>4 PT Sessions / Month</li>
+        <li>Nutrition Coaching</li>
+        <li class="off">Recovery Suite Access</li>
+      </ul>
+      <a href="#" class="price-btn">Join Elite</a>
+    </div>
+    <div class="price-card">
+      <span class="price-badge">All-In</span>
+      <div class="price-name">FORGE PRO</div>
+      <div class="price-amount"><sup>$</sup>149<span>/mo</span></div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li>Full Gym Access</li>
+        <li>Unlimited Group Classes</li>
+        <li>Locker Room Access</li>
+        <li>Unlimited PT Sessions</li>
+        <li>Nutrition Coaching</li>
+        <li>Recovery Suite Access</li>
+      </ul>
+      <a href="#" class="price-btn">Go Pro</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="testimonials-header reveal">
+    <div>
+      <span class="section-eyebrow">Proof</span>
+      <h2 class="section-title">REAL RESULTS,<br>REAL PEOPLE</h2>
+    </div>
+  </div>
+  <div class="testimonials-track reveal">
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"Iron Forge completely transformed my approach to training. In 6 months I put on 18 lbs of muscle and dropped my body fat by 9%. The coaching here is elite."</p>
+      <div class="testimonial-author">
+        <img class="author-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="James">
+        <div>
+          <div class="author-name">JAMES KIMANI</div>
+          <div class="author-title">Member since 2022</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"The trainers here don't just count reps — they understand biomechanics, nutrition, and recovery. I've competed in 3 powerlifting meets since joining. Couldn't recommend more."</p>
+      <div class="testimonial-author">
+        <img class="author-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" alt="Amara">
+        <div>
+          <div class="author-name">AMARA DIALLO</div>
+          <div class="author-title">Member since 2021</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"I've been to gyms across three countries. Iron Forge is in a different league — the atmosphere, equipment, and coaching quality are all world-class."</p>
+      <div class="testimonial-author">
+        <img class="author-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80" alt="David">
+        <div>
+          <div class="author-name">DAVID OSEI</div>
+          <div class="author-title">Member since 2023</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-left">
+    <p class="cta-eyebrow">Limited Spots Available</p>
+    <h2 class="cta-title">STOP WAITING.<br>START FORGING.</h2>
+  </div>
+  <div class="cta-actions">
+    <a href="#pricing" class="btn-white">Claim Free Trial</a>
+    <a href="tel:+18005550123" class="cta-phone">+1 800 555 0123</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="logo">IRON<span>FORGE</span></a>
+      <p>A premier performance gym built for those who refuse to be ordinary. Train harder. Recover smarter. Become exceptional.</p>
+      <div class="footer-socials">
+        <a href="#">ig</a>
+        <a href="#">tw</a>
+        <a href="#">fb</a>
+        <a href="#">yt</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Programs</h5>
+      <ul>
+        <li><a href="#">Strength Training</a></li>
+        <li><a href="#">HIIT & Cardio</a></li>
+        <li><a href="#">Olympic Lifting</a></li>
+        <li><a href="#">Sports Conditioning</a></li>
+        <li><a href="#">Yoga & Recovery</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Gym</h5>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Meet the Trainers</a></li>
+        <li><a href="#">Membership Plans</a></li>
+        <li><a href="#">Facilities</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="#">1204 Forge Ave, Downtown</a></li>
+        <li><a href="#">Mon–Fri: 5am – 11pm</a></li>
+        <li><a href="#">Sat–Sun: 6am – 9pm</a></li>
+        <li><a href="#">info@ironforge.gym</a></li>
+        <li><a href="#">+1 800 555 0123</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Iron Forge Gym. All rights reserved.</span>
+    <span>Privacy Policy · Terms of Service · Cookie Policy</span>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll effect
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
